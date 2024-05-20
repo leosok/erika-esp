@@ -16,5 +16,8 @@ RUN python models.py
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
+# Run Super User Creation from .env
+RUN poetry run python manage.py createsuperuser --noinput
+
 # Run the app with Gunicorn
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "bottle_app:application"]

@@ -8,24 +8,19 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-# we need to install poetry to install the dependencies
 RUN pip install poetry
 
 # Copy the poetry.lock and pyproject.toml to the container
 COPY pyproject.toml poetry.lock ./
 
 # Install the dependencies
-RUN poetry install
+RUN poetry install --without dev
 
-# Copy the Django project to the container
+##### End of dependencies installation #####
+
 COPY . .
 
 # Expose the port that Django runs on
 EXPOSE 8111
-
-# Start the Django development server, we use 8111 to avoid conflict with the host
-
-# pause the container for debugging
-#CMD ["sleep", "240"]
 
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8111"]
