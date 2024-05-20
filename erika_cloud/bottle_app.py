@@ -42,6 +42,11 @@ def _close_db():
 def send_static(filename):
     return static_file(filename, root=op.join(op.dirname(__file__), 'static'))
 
+# healthz
+@route('/healthz')
+def healthz():
+    return "OK"
+
 
 @route('/')
 @view('main_page_sender.tpl.html')
