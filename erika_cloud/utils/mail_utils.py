@@ -7,8 +7,16 @@ sys.path.append("..")
 from models import Typewriter, Message
 from email.message import EmailMessage
 import smtplib
-from secrets import SMTP_PASSWORD, SMTP_SERVER, SMTP_USER
 from utils.mqqt import ErikaMqqt
+
+try:
+    from secrets import SMTP_SERVER, SMTP_USER, SMTP_PASSWORD
+except ImportError:
+    # load from environment variables
+    import os
+    SMTP_SERVER =  os.getenv('SMTP_SERVER')
+    SMTP_USER =  os.getenv('SMTP_USER')
+    SMTP_PASSWORD =  os.getenv('SMTP_PASSWORD')
 
 
 def print_mail_on_erika(message: Message):

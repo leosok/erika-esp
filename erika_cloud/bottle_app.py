@@ -87,11 +87,18 @@ def single(hashid):
 @route('/keycast/<uuid>')
 @view('receiver.tpl.html')
 def keycast_receiver(uuid):
-   from secrets import MQQT_SERVER, MQQT_USERNAME, MQQT_PASSWORD
-   topic_keycast = "erika/keystrokes/{}".format(uuid)
-   topic_status = "erika/status/{}".format(uuid)
-   return dict(config={"MQQT_SERVER": MQQT_SERVER, "MQQT_USERNAME": MQQT_USERNAME, "MQQT_PASSWORD": MQQT_PASSWORD, 
-        "erika_uuid": uuid, "topic_keycast": topic_keycast, "topic_status": topic_status})
+    
+    try:
+        from secrets import MQQT_SERVER, MQQT_USERNAME, MQQT_PASSWORD
+    except ImportError:
+        MQQT_SERVER = os.getenv('MQQT_SERVER')
+        MQQT_USERNAME = os.getenv('MQQT_USERNAME')
+        MQQT_PASSWORD = os.getenv('MQQT_PASSWORD')
+
+    topic_keycast = "erika/keystrokes/{}".format(uuid)
+    topic_status = "erika/status/{}".format(uuid)
+    return dict(config={"MQQT_SERVER": MQQT_SERVER, "MQQT_USERNAME": MQQT_USERNAME, "MQQT_PASSWORD": MQQT_PASSWORD, 
+            "erika_uuid": uuid, "topic_keycast": topic_keycast, "topic_status": topic_status})
 
 
 #####################################################
