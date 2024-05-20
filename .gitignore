@@ -147,3 +147,6 @@ web_server_mqqt_receiver/Include/
 web_server_mqqt_receiver/share/
 
 esp32/config/user_config.json
+.idea/
+esp32/.DS_Store
+.DS_Store
