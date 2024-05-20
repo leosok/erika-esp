@@ -1,0 +1,12 @@
+
+version: '3.8'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8111:8111
+    env_file:
+      - .env
