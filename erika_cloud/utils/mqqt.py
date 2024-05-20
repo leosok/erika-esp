@@ -1,9 +1,9 @@
 # For relative imports to work in Python 3.6
+import os
 import sys;
 from json import JSONDecodeError
 
 sys.path.append("..")
-from secrets import MQQT_SERVER, MQQT_USERNAME, MQQT_PASSWORD
 import uuid
 import paho.mqtt.client as mqtt
 import json
@@ -11,6 +11,13 @@ import logging
 from models import Textdata, Typewriter
 from peewee import IntegrityError, DoesNotExist
 from datetime import datetime
+
+try:
+    from secrets import MQQT_SERVER, MQQT_USERNAME, MQQT_PASSWORD
+except ImportError:
+    MQQT_SERVER = os.getenv('MQQT_SERVER')
+    MQQT_USERNAME = os.getenv('MQQT_USERNAME')
+    MQQT_PASSWORD = os.getenv('MQQT_PASSWORD')
 
 logging.basicConfig()
 logger = logging.getLogger("erika_mqqt_bridge")
