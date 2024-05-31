@@ -1,16 +1,10 @@
-from ninja import NinjaAPI, Swagger
-
-api = NinjaAPI()
-
-from django.contrib import admin
-from django.urls import path
-from .api import api
+from ninja import NinjaAPI, Swagger, Router
 
 # rewrite swagger to have try out button automatically enabled
 api = NinjaAPI(csrf=True, title="Erika Cloud", version="1.0.0", docs=Swagger(settings={"tryItOutEnabled": True}))
 
-
+router = Router()
 # add health check endpoint
-@api.get("/healthz")
+@router.get("/healthz")
 def healthz(request):
     return {"status": "ok"}

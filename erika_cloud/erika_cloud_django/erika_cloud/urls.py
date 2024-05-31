@@ -16,7 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .api import api
+from ninja import NinjaAPI
+
+from typewriter.api import typewriter_router
+from .api import router as erika_cloud_api
+
+api = NinjaAPI()
+
+# Optionally, you can add routes here if you have additional routes directly in this file
+# Example: api.add_router("/somepath", some_module.router)
+
+# Include typewriter API
+api.add_router("/typewriter/", typewriter_router)
+api.add_router("/erika_cloud/", erika_cloud_api)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
