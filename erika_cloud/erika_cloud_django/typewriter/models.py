@@ -33,6 +33,9 @@ class Typewriter(models.Model):
     chat_active = models.BooleanField(default=True)
     last_seen = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.erika_name
+
 class Message(models.Model):
     typewriter = models.ForeignKey(Typewriter, related_name='messages', on_delete=models.CASCADE)
     sender = models.CharField(max_length=255)

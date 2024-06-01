@@ -19,6 +19,7 @@ from django.urls import path, include
 from ninja import NinjaAPI
 
 from typewriter.api import typewriter_router
+from typewriter.views import user_dashboard
 from .api import router as erika_cloud_api
 
 api = NinjaAPI()
@@ -35,5 +36,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", api.urls),
     path('accounts/', include('allauth.urls')), # new
+    path('dashboard/', user_dashboard, name='user_dashboard'),
 
 ]

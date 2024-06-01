@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .no-content {
+            color: lightgrey;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <div class="bg-primary text-white p-4 rounded d-flex justify-content-between align-items-center">
+            <h1 class="h3">Welcome, {{ request.user.first_name }}</h1>
+            <a href="{% url 'account_logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Typewriter</h5>
+                        {% if typewriter %}
+                            <p><strong>Name:</strong> {{ typewriter.erika_name }}</p>
+                            <p><strong>UUID:</strong> {{ typewriter.uuid }}</p>
+                            <p><strong>Email:</strong> {{ typewriter.email }}</p>
+                        {% else %}
+                            <p class="no-content">No typewriter found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Messages</h5>
+                        {% if messages %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">From</th>
+                                        <th scope="col">Subject</th>
+                                        <th scope="col">Received at</th>
+                                        <th scope="col">Body</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for message in messages %}
+                                        <tr>
+                                            <td>{{ message.sender }}</td>
+                                            <td>{{ message.subject }}</td>
+                                            <td>{{ message.received_at }}</td>
+                                            <td>{{ message.body }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p class="no-content">No messages.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Pages</h5>
+                        {% if pages %}
+                            <pre class="bg-light p-3 border rounded" style="height: 300px; overflow-y: scroll;">{{ pages }}</pre>
+                        {% else %}
+                            <p class="no-content">No pages.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
