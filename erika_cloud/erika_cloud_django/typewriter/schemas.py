@@ -23,8 +23,6 @@ class TypewriterSchema(BaseModel):
     email: str
     status: int
 
-    class Config:
-        orm_mode: True
 
 class MessageSchema(BaseModel):
     id: int

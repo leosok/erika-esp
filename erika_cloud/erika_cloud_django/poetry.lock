@@ -72,6 +72,26 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-allauth"
+version = "0.63.3"
+description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django_allauth-0.63.3.tar.gz", hash = "sha256:2374164c468a309e6badf70bc3405136df6036f24a20a13387f2a063066bdaa9"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[package.extras]
+mfa = ["qrcode (>=7.0.0)"]
+openid = ["python3-openid (>=3.0.8)"]
+saml = ["python3-saml (>=1.15.0,<2.0.0)"]
+socialaccount = ["pyjwt[crypto] (>=1.7)", "requests (>=2.0.0)", "requests-oauthlib (>=0.3.0)"]
+steam = ["python3-openid (>=3.0.8)"]
+
+[[package]]
 name = "django-environ"
 version = "0.11.2"
 description = "A package that allows you to utilize 12factor inspired environment variables to configure your Django application."
@@ -86,6 +106,20 @@ files = [
 develop = ["coverage[toml] (>=5.0a4)", "furo (>=2021.8.17b43,<2021.9.dev0)", "pytest (>=4.6.11)", "sphinx (>=3.5.0)", "sphinx-notfound-page"]
 docs = ["furo (>=2021.8.17b43,<2021.9.dev0)", "sphinx (>=3.5.0)", "sphinx-notfound-page"]
 testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
+
+[[package]]
+name = "django-jazzmin"
+version = "3.0.0"
+description = "Drop-in theme for django admin, that utilises AdminLTE 3 & Bootstrap 4 to make yo' admin look jazzy"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_jazzmin-3.0.0-py3-none-any.whl", hash = "sha256:95ef5d7571519c4c53c24083ec417a0db126aaf1d7dc7311e034a90e430392b3"},
+    {file = "django_jazzmin-3.0.0.tar.gz", hash = "sha256:424ac3e0f7bfd9ce973b581a66abde92035ba6c5b17605615fdf6bd97c4dcb33"},
+]
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "django-ninja"
@@ -106,6 +140,23 @@ pydantic = ">=2.0,<3.0.0"
 dev = ["pre-commit"]
 doc = ["markdown-include", "mkdocs", "mkdocs-material", "mkdocstrings"]
 test = ["django-stubs", "mypy (==1.7.1)", "psycopg2-binary", "pytest", "pytest-asyncio", "pytest-cov", "pytest-django", "ruff (==0.1.7)"]
+
+[[package]]
+name = "django-use-email-as-username"
+version = "1.4.0"
+description = "A Django app to use email as username for user authentication."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django_use_email_as_username-1.4.0-py3-none-any.whl", hash = "sha256:4ac2dc6f7d9c0ad7c156fb56a872f6d32bbf21af0a16748dd84650f5d9deaca3"},
+    {file = "django_use_email_as_username-1.4.0.tar.gz", hash = "sha256:58a6f38a487a887bcaefa5435a5abf5620994805f68cb62b2dc3f226bf177fb9"},
+]
+
+[package.dependencies]
+django = ">=1.11"
+
+[package.extras]
+testing = ["codecov", "coverage"]
 
 [[package]]
 name = "iniconfig"
@@ -395,4 +446,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f4710dcabbb876d29da1e81666d12ab5fb56d353862e6829d46eb33f4f4c88ab"
+content-hash = "24398f99afb9537dc9887b0b6323ba1a8ba67e2bbd43b31c979272084b4aef75"

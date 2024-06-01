@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import models
 
@@ -23,10 +24,8 @@ class Textdata(models.Model):
         return fulltext
 
 class Typewriter(models.Model):
-    user_firstname = models.CharField(max_length=255, null=True)
-    user_lastname = models.CharField(max_length=255, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     erika_name = models.CharField(max_length=255, null=True, unique=True)
-    user_email = models.CharField(max_length=255, null=True)
     uuid = models.CharField(max_length=255, unique=True)
     email = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(default=timezone.now)

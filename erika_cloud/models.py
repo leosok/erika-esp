@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Textdata(models.Model):
@@ -11,15 +12,15 @@ class Textdata(models.Model):
         lines = Textdata.objects.filter(hashid=hashid).order_by('line_number')
         return "\n".join([line.text for line in lines])
 
+
 class Typewriter(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     uuid = models.CharField(max_length=255, unique=True)
-    user_firstname = models.CharField(max_length=255, blank=True)
-    user_lastname = models.CharField(max_length=255, blank=True)
-    user_email = models.EmailField()
-    chat_active = models.BooleanField(default=False)
-    erika_name = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True)
+    erika_name = models.CharField(max_length=100, unique=True)
     status = models.IntegerField(default=0)
+    email = models.EmailField(unique=True)
+    chat_active = models.BooleanField(default=False)
+    # Add other fields as necessary
 
 class Message(models.Model):
     typewriter = models.ForeignKey(Typewriter, related_name='messages', on_delete=models.CASCADE)

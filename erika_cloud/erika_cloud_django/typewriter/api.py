@@ -1,8 +1,14 @@
 import logging
 import os
 from email.utils import parseaddr
-
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.db import IntegrityError
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from ninja import NinjaAPI,  Router
 from django.shortcuts import get_object_or_404
 
@@ -10,6 +16,8 @@ from django.shortcuts import get_object_or_404
 from .models import Textdata, Typewriter, Message
 from .schemas import TextdataSchema, TypewriterSchema, MessageSchema, TypewriterCreateSchema
 from typing import List
+
+from erika_cloud.utils.dj_mail_utils import send_password_reset
 
 typewriter_router = Router(tags=["Typewriter"])
 
@@ -83,7 +91,60 @@ def incoming_webhook(request, data: dict):
 
     return {"detail": "Message created"}
 
-@typewriter_router.post("/typewriter", response=TypewriterSchema)
+@typewriter_router.post("/typewriter")
+def register_typewriter(request, data: TypewriterCreateSchema) -> TypewriterSchema:
+    # Create the user
+    user, was_just_created = User.objects.get_or_create(
+        username=data.email.lower(),
+        first_name=data.firstname,
+        last_name=data.lastname,
+        email=data.email.lower(),
+        is_active=False  # User is inactive until they set their password
+    )
+
+    # check if a typewriter with the same name already exists, if yes change the name to xxx1
+    i = 1
+    while Typewriter.objects.filter(erika_name=data.erika_name.lower()).exists():
+        i += 1
+        data.erika_name = f"{data.erika_name}{i}"
+
+    # Create the typewriter and associate with the user
+    typewriter = Typewriter.objects.create(
+        user=user,
+        uuid=data.uuid,
+        erika_name=data.erika_name.lower(),
+        email=f"{data.erika_name.lower()}@{os.getenv('APP_HOST')}",
+        chat_active=data.chat_active
+    )
+
+    # Generate password reset link
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    send_password_reset(user)
+
+    # Send email with the reset link
+    # subject = 'Set your password'
+    # message = render_to_string('registration/set_password_email.html', {
+    #     'user': user,
+    #     'reset_link': reset_link,
+    # })
+    # send_mail(subject, message, 'admin@erika-cloud.de', [user.email])
+
+    return_typewriter = TypewriterSchema(
+        id=typewriter.pk,
+        uuid=typewriter.uuid,
+        user_firstname=user.first_name,
+        user_lastname=user.last_name,
+        user_email=user.email,
+        chat_active=typewriter.chat_active,
+        erika_name=typewriter.erika_name,
+        email=typewriter.email,
+        status=typewriter.status
+    )
+
+    return return_typewriter
+
+
 def register_typewriter(request, data: TypewriterCreateSchema):
     typewriter, created = Typewriter.objects.get_or_create(uuid=data.uuid)
 
@@ -106,7 +167,9 @@ def register_typewriter(request, data: TypewriterCreateSchema):
     typewriter.email = f"{typewriter.erika_name.lower()}@{os.getenv('APP_HOST')}"
     typewriter.save()
 
-    return typewriter
+    typewriter_return = TypewriterSchema.from_orm(typewriter)
+
+    return typewriter_return
 
 @typewriter_router.post("/typewriter/{uuid}/print", response=dict)
 def typewriter_print(request, uuid: str, data: dict):
