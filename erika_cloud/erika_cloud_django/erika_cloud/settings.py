@@ -20,7 +20,7 @@ env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-HTTP_HOST = os.getenv('HTTP_HOST')
+HTTP_HOST = os.getenv('HTTP_HOST', 'erika-cloud.de')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-#+n8&lfxvwkw0byr!0v&n4@d(m=&6amyh)+r+7m7iz8(090l%n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['erika-cloud.de', 'localhost']
 
 
 # Application definition

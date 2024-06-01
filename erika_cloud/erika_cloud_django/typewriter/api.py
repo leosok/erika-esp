@@ -99,7 +99,7 @@ def register_typewriter(request, data: TypewriterCreateSchema) -> TypewriterSche
         first_name=data.firstname,
         last_name=data.lastname,
         email=data.email.lower(),
-        is_active=False  # User is inactive until they set their password
+        is_active=True  # User is inactive until they set their password
     )
 
     # check if a typewriter with the same name already exists, if yes change the name to xxx1
