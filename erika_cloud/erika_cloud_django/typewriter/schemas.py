@@ -40,5 +40,5 @@ class TypewriterCreateSchema(BaseModel):
     firstname: Optional[str] = None
     lastname: Optional[str] = None
     email: str
-    chat_active: bool
+    chat_active: bool = True
     erika_name: str

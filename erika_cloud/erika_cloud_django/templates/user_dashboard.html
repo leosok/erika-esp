@@ -1,86 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .logout {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout:hover {
+            background-color: #c0392b;
+        }
+        .main-container {
+            margin-top: 30px;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-title {
+            font-weight: bold;
+            color: #4a90e2;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
         .no-content {
-            color: lightgrey;
+            color: #999;
+            font-style: italic;
+        }
+        .typewriter-section {
+            margin-bottom: 20px;
+        }
+        .typewriter-info {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .table {
+            font-size: 0.9rem;
+        }
+        .table th {
+            background-color: #4a90e2;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header h1 {
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-4">
-        <div class="bg-primary text-white p-4 rounded d-flex justify-content-between align-items-center">
-            <h1 class="h3">Welcome, {{ request.user.first_name }}</h1>
-            <a href="{% url 'account_logout' %}" class="btn btn-danger">Logout</a>
+<body>
+    <div class="container-fluid px-0">
+        <div class="header d-flex justify-content-between align-items-center">
+            <h1><i class="fas fa-user-circle me-2"></i>Welcome, {{ request.user.username }}</h1>
+            <a href="{% url 'account_logout' %}" class="logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
         </div>
 
-        <div class="row mt-4">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Typewriter</h5>
-                        {% if typewriter %}
-                            <p><strong>Name:</strong> {{ typewriter.erika_name }}</p>
-                            <p><strong>UUID:</strong> {{ typewriter.uuid }}</p>
-                            <p><strong>Email:</strong> {{ typewriter.email }}</p>
-                        {% else %}
-                            <p class="no-content">No typewriter found.</p>
-                        {% endif %}
+        <div class="container main-container">
+            <div class="row">
+                <div class="col-md-4 typewriter-section">
+                    <div class="card h-100">
+                        <div class="card-body typewriter-info">
+                            <h5 class="card-title"><i class="fas fa-keyboard me-2"></i>Typewriters</h5>
+                            {% if typewriters %}
+                                <form method="get" action="{% url 'user_dashboard' %}">
+                                    <select name="typewriter_id" class="form-select mb-3" onchange="this.form.submit()">
+                                        {% for typewriter in typewriters %}
+                                            <option value="{{ typewriter.id }}" {% if typewriter == selected_typewriter %}selected{% endif %}>
+                                                {{ typewriter.erika_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                                {% if selected_typewriter %}
+                                    <p><strong>Name:</strong> {{ selected_typewriter.erika_name }}</p>
+                                    <p><strong>UUID:</strong> {{ selected_typewriter.uuid }}</p>
+                                    <p><strong>Email:</strong> {{ selected_typewriter.email }}</p>
+                                {% endif %}
+                            {% else %}
+                                <p class="no-content">No typewriters found.</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Messages</h5>
-                        {% if messages %}
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">From</th>
-                                        <th scope="col">Subject</th>
-                                        <th scope="col">Received at</th>
-                                        <th scope="col">Body</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for message in messages %}
-                                        <tr>
-                                            <td>{{ message.sender }}</td>
-                                            <td>{{ message.subject }}</td>
-                                            <td>{{ message.received_at }}</td>
-                                            <td>{{ message.body }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p class="no-content">No messages.</p>
-                        {% endif %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-envelope me-2"></i>Messages</h5>
+                            {% if messages %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>From</th>
+                                                <th>Subject</th>
+                                                <th>Received</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for message in messages %}
+                                                <tr>
+                                                    <td>{{ message.sender }}</td>
+                                                    <td>{{ message.subject }}</td>
+                                                    <td>{{ message.received_at }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p class="no-content">No messages for the selected typewriter.</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Pages</h5>
-                        {% if pages %}
-                            <pre class="bg-light p-3 border rounded" style="height: 300px; overflow-y: scroll;">{{ pages }}</pre>
-                        {% else %}
-                            <p class="no-content">No pages.</p>
-                        {% endif %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-file-alt me-2"></i>Pages</h5>
+                            {% if pages %}
+                                <pre class="p-3 border rounded" style="height: 300px; overflow-y: auto;">{{ pages }}</pre>
+                            {% else %}
+                                <p class="no-content">No pages for the selected typewriter.</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

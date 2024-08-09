@@ -13,7 +13,9 @@ import os
 from pathlib import Path
 import dj_database_url
 import environ
+from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv())
 # Initialize environment variables
 env = environ.Env()
 
@@ -112,9 +114,11 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 
 # add a pgsql database
+DATABASE_URL = env('DATABASE_URL', default='sqlite:///db.sqlite3')
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=env('DATABASE_URL')
+        default=DATABASE_URL
     )
 }
 
