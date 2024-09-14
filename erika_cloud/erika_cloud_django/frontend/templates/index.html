@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Erika Cloud</title>
-    <link rel="stylesheet" href="{% static 'frontend/main.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/css/main.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
-    <script src="{% static 'frontend/erika_web_client.js' %}" type="text/javascript"></script>
+    <script src="{% static 'frontend/js/mqqt_config.js' %}" type="text/javascript"></script>
+    <script src="{% static 'frontend/js/erika_web_client.js' %}" type="text/javascript"></script>
 </head>
 <body>
     <div class="header">
-        <div class="logo_container">
+        <div class="logo_contrainer">
             <img src="{% static 'frontend/img/erika_cloud_logo.gif' %}" alt="Erika Cloud Logo">
         </div>
     </div>
@@ -19,8 +20,8 @@
         <p>Status: <span id="status"></span></p>
         <textarea id="erika_text" placeholder="Tell me lies..."></textarea>
         <br>
-        <button id="print_button" type="button" onclick="send_mqtt_msg(client, 'erika/1/print')">Drucken</button>
-        <!-- <button type="button" onclick="send_mqtt_msg(client, 'erika/1/show')">Anzeigen</button> -->
+        <button id="print_button" type="submit" onclick="send_mqtt_msg(client, 'erika/1/print')">Drucken</button>
+        <!-- <button type="submit" onclick="send_mqtt_msg(client, 'erika/1/show')">Anzeigen</button> -->
     </div>
 </body>
 </html>

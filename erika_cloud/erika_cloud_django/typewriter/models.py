@@ -33,6 +33,18 @@ class Typewriter(models.Model):
     chat_active = models.BooleanField(default=True)
     last_seen = models.DateTimeField(default=timezone.now)
 
+    @property
+    def user_firstname(self):
+        return self.user.first_name
+
+    @property
+    def user_lastname(self):
+        return self.user.last_name
+
+    @property
+    def user_email(self):
+        return self.user.email
+
     def __str__(self):
         return self.erika_name
 

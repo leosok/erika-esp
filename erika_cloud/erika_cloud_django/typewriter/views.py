@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -32,3 +33,5 @@ def user_dashboard(request):
         'messages': messages,
     }
     return render(request, 'user_dashboard.html', context)
+
+

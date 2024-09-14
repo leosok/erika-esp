@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 
@@ -17,12 +17,15 @@ class TypewriterSchema(BaseModel):
     uuid: str
     user_firstname: Optional[str] = None
     user_lastname: Optional[str] = None
-    user_email: str
+    email: str = Field(..., name="user_email")
     chat_active: bool
     erika_name: str
     email: str
     status: int
 
+    class Config:
+        orm_mode: True
+        from_attributes = True
 
 class MessageSchema(BaseModel):
     id: int

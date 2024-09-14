@@ -173,14 +173,17 @@ def register_typewriter(request, data: TypewriterCreateSchema):
 
     return typewriter_return
 
-@typewriter_router.post("/typewriter/{uuid}/print", response=dict)
+@typewriter_router.post("/{uuid}/print", response=dict)
 def typewriter_print(request, uuid: str, data: dict):
     logging.info("Printing")
     typewriter = get_object_or_404(Typewriter, uuid=uuid)
     #print_on_erika(typewriter, data['body'])
     return {"detail": f"Printing on `{typewriter.erika_name.capitalize()}`"}
 
-@typewriter_router.get("/typewriters/online", response=List[TypewriterSchema])
+@typewriter_router.get("/online", response=List[TypewriterSchema])
 def typewriters_online(request):
-    typewriters = Typewriter.objects.filter(status=1)
-    return typewriters
+    typewriters = Typewriter.objects.filter(status=1).select_related('user')
+    typewriter_schema_response = [TypewriterSchema.from_orm(typewriter) for typewriter in typewriters]
+    return typewriter_schema_response
+    #for typewriter in typewriters:
+    #return [typewriter for typewriter in typewriters]

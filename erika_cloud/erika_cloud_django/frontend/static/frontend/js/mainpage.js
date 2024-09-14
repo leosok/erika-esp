@@ -14,7 +14,7 @@ function send_text_to_printer() {
             // Sending and receiving data in JSON format using POST method
             if (uuid != 0) {
                 var xhr = new XMLHttpRequest();
-                var url = "/typewriter/" + uuid + "/print";
+                var url = "/api/typewriter/" + uuid + "/print";
 
                 console.log("printig to " + url)
 
@@ -29,10 +29,10 @@ function send_text_to_printer() {
                 xhr.send(data);
             }
         }
-
+//
 // function reload_online_typewriters(){
 //     var xhr = new XMLHttpRequest();
-//         var url = "/typewriter/online";
+//         var url = "/api/typewriter/online";
 //
 //         xhr.open("GET", url, true);
 //         xhr.onreadystatechange = function () {
@@ -54,6 +54,7 @@ function send_text_to_printer() {
 //         };
 //         xhr.send(null);
 //     }
+
 
     function reload_online_typewriters() {
     fetch('/api/typewriter/online')
