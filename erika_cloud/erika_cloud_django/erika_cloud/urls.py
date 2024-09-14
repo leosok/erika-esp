@@ -28,8 +28,8 @@ api = NinjaAPI()
 # Example: api.add_router("/somepath", some_module.router)
 
 # Include typewriter API
-api.add_router("/typewriter/", typewriter_router)
-api.add_router("/erika_cloud/", erika_cloud_api)
+api.add_router("/typewriter", typewriter_router)
+api.add_router("/erika_cloud", erika_cloud_api)
 
 
 urlpatterns = [

@@ -84,6 +84,16 @@
                 margin-bottom: 15px;
             }
         }
+
+         .printed-status {
+            font-size: 1.2rem;
+        }
+        .printed {
+            color: #28a745;
+        }
+        .pending {
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
@@ -133,6 +143,7 @@
                                                 <th>From</th>
                                                 <th>Subject</th>
                                                 <th>Received</th>
+                                                <th>Printed</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -141,6 +152,13 @@
                                                     <td>{{ message.sender }}</td>
                                                     <td>{{ message.subject }}</td>
                                                     <td>{{ message.received_at }}</td>
+                                                    <td class="printed-status">
+                                                        {% if message.is_printed %}
+                                                            <span class="printed" title="Printed">🟢</span>
+                                                        {% else %}
+                                                            <span class="pending" title="Pending">🟡</span>
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>

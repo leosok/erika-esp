@@ -31,6 +31,7 @@ class MessageSchema(BaseModel):
     subject: str
     body: str
     timestamp: datetime
+    is_printed: bool
 
     class Config:
         orm_mode: True

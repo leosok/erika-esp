@@ -91,7 +91,7 @@ def incoming_webhook(request, data: dict):
 
     return {"detail": "Message created"}
 
-@typewriter_router.post("/typewriter")
+@typewriter_router.post("/new")
 def register_typewriter(request, data: TypewriterCreateSchema) -> TypewriterSchema:
     # Create the user
     user, was_just_created = User.objects.get_or_create(
@@ -120,8 +120,10 @@ def register_typewriter(request, data: TypewriterCreateSchema) -> TypewriterSche
     # Generate password reset link
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    send_password_reset(user)
-
+    try:
+        send_password_reset(user)
+    except Exception as e:
+        logging.info( {"detail": f"Error sending email to {user.email}: {e}"})
     # Send email with the reset link
     # subject = 'Set your password'
     # message = render_to_string('registration/set_password_email.html', {
