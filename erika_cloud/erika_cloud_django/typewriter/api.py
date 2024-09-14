@@ -1,8 +1,10 @@
+import json
 import logging
 import os
 from email.utils import parseaddr
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
+from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.template.loader import render_to_string
@@ -174,8 +176,10 @@ def register_typewriter(request, data: TypewriterCreateSchema):
     return typewriter_return
 
 @typewriter_router.post("/{uuid}/print", response=dict)
-def typewriter_print(request, uuid: str, data: dict):
-    logging.info("Printing")
+def typewriter_print(request:WSGIRequest, uuid: str):
+    requestbody = json.loads(request.body.decode('utf-8'))
+    print_text = requestbody['body']
+    print(f"Printing on {uuid}: {print_text}")
     typewriter = get_object_or_404(Typewriter, uuid=uuid)
     #print_on_erika(typewriter, data['body'])
     return {"detail": f"Printing on `{typewriter.erika_name.capitalize()}`"}

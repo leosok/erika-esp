@@ -19,6 +19,7 @@ python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
+bpython = "^0.24"
 
 
 [build-system]
