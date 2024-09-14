@@ -124,7 +124,7 @@ def register_typewriter(request, data: TypewriterCreateSchema) -> TypewriterSche
         send_password_reset(user)
     except Exception as e:
         logging.info( {"detail": f"Error sending email to {user.email}: {e}"})
-    # Send email with the reset link
+    # # Send email with the reset link
     # subject = 'Set your password'
     # message = render_to_string('registration/set_password_email.html', {
     #     'user': user,

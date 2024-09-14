@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from ninja import NinjaAPI
 
+from frontend.views import index
 from typewriter.api import typewriter_router
 from typewriter.views import user_dashboard
 from .api import router as erika_cloud_api
@@ -37,5 +38,6 @@ urlpatterns = [
     path("api/", api.urls),
     path('accounts/', include('allauth.urls')), # new
     path('dashboard/', user_dashboard, name='user_dashboard'),
+    path('', index, name='frontend_index'),
 
 ]
