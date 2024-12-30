@@ -21,6 +21,8 @@ from typing import List
 
 from erika_cloud.utils.dj_mail_utils import send_password_reset
 
+from .utils.mqtt_utils import send_print_message
+
 typewriter_router = Router(tags=["Typewriter"])
 
 @typewriter_router.get("/pages", response=List[TextdataSchema])
@@ -181,6 +183,7 @@ def typewriter_print(request:WSGIRequest, uuid: str):
     print_text = requestbody['body']
     print(f"Printing on {uuid}: {print_text}")
     typewriter = get_object_or_404(Typewriter, uuid=uuid)
+    send_print_message(uuid, print_text)
     #print_on_erika(typewriter, data['body'])
     return {"detail": f"Printing on `{typewriter.erika_name.capitalize()}`"}
 

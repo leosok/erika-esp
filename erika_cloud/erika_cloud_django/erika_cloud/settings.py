@@ -13,9 +13,9 @@ import os
 from pathlib import Path
 import dj_database_url
 import environ
-# from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-# load_dotenv(find_dotenv())
+load_dotenv(find_dotenv())
 # Initialize environment variables
 env = environ.Env()
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites", # added for django-mqtt
     "typewriter",
     "frontend",
 
@@ -53,7 +54,11 @@ INSTALLED_APPS = [
     'allauth', # new
     'allauth.account', # new
     'allauth.socialaccount', # new
+
+    # Mqqt
+    "dmqtt"
 ]
+SITE_ID = 1
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {
@@ -69,7 +74,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-"allauth.account.middleware.AccountMiddleware"
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = "erika_cloud.urls"
@@ -174,3 +179,45 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_password')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'your_email@example.com')
 
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+# MQTT
+MQTT_USER = os.getenv('MQTT_USER', 'mqtt')
+MQTT_PASS = os.getenv('MQTT_PASS', 'pass')
+MQTT_HOST = os.getenv('MQTT_HOST', 'mqtt://localhost')
+MQTT_PORT = int(os.getenv('MQTT_PORT', 1883))
+MQTT_CLIENT_ID = os.getenv('MQTT_CLIENT_ID', 'erika_cloud')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        '': {  # Root logger
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'mqtt_handler': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'dmqtt': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+from erika_cloud.utils import mqtt_handling # noqa

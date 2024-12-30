@@ -7,6 +7,9 @@ WORKDIR /app
 
 RUN pip install poetry
 
+# Install supervisor
+RUN apt-get update && apt-get install -y supervisor
+
 # Copy the poetry.lock and pyproject.toml to the container
 COPY pyproject.toml poetry.lock ./
 
@@ -14,7 +17,7 @@ COPY pyproject.toml poetry.lock ./
 # RUN poetry config virtualenvs.in-project true
 
 # Install the dependencies
-RUN poetry install --without dev --no-root
+RUN poetry install --without dev #--no-root
 
 ##### End of dependencies installation #####
 
@@ -29,4 +32,9 @@ EXPOSE 8111
 # create a superuser
 #RUN poetry run python manage.py createsuperuser --noinput --username admin --email admin@example.com
 
-CMD ["poetry", "run", "python3", "manage.py", "runserver", "0.0.0.0:8111"]
+
+# Copy supervisor configuration
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Change entrypoint to use supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

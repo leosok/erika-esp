@@ -1,6 +1,5 @@
 import logging
 
-from django.core.mail import EmailMessage
 from ninja import NinjaAPI, Swagger, Router
 
 from erika_cloud import settings

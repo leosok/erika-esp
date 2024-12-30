@@ -1,41 +1,42 @@
-
-version: '3.8'
-
 services:
   web:
     build: .
-    command: >
-      sh -c "poetry run python manage.py makemigrations &&
-             poetry run python manage.py migrate &&
-             poetry run python manage.py runserver 0.0.0.0:8111"
-    volumes:
-      - .:/app
     ports:
       - 8111:8111
     env_file:
       - .env
     environment:
      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-
+    # volumes:
+    #   - .:/app
     depends_on:
-      - db
-    # on start makemigrations and migrate
-
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
   db:
     image: postgres:13
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data1:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   adminer:
-      image: adminer
-      restart: always
-      depends_on:
-          - db
+    image: adminer
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8080:8080
 
 volumes:
-  postgres_data:
+  postgres_data1:
