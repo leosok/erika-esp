@@ -22,7 +22,11 @@
         <select id="typewriters_online" name="typewriters_online"{% if not typewriters %} disabled{% endif %}>
             {% if typewriters %}
                 {% for typewriter in typewriters %}
-                    <option value="{{ typewriter.uuid }}">{{ typewriter.erika_name }} ({{ typewriter.user_firstname }})</option>
+                    <!-- Debug info -->
+                    
+                    Full typewriter object: {{ typewriter }}
+                    erika_name value: {{ typewriter.erika_name }}                   
+                    <option value="{{ typewriter.uuid }}">{{ typewriter.erika_name }}</option>
                 {% endfor %}
             {% else %}
                 <option value="0">Keine Erikas online</option>
@@ -31,6 +35,7 @@
         <textarea id="erika_text" placeholder="Tell me lies..."></textarea>
         <br/>
         <button id="print_button" onclick="send_text_to_printer()" type="submit">Drucken</button>
+        <button id="print_all_button" onclick="send_text_to_all_printers()" type="submit" style="display: none;">An Alle Drucken</button>
         <!-- <button type="submit" onclick="send_mqtt_msg(client, 'erika/1/show')">Anzeigen</button> -->
     </div>
 </body>

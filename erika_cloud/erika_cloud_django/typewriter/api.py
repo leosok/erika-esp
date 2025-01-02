@@ -21,7 +21,7 @@ from typing import List
 
 from erika_cloud.utils.dj_mail_utils import send_password_reset
 
-from .utils.mqtt_utils import send_print_message
+from .utils.mqtt_utils import send_print_message, send_print_message_to_all
 
 typewriter_router = Router(tags=["Typewriter"])
 
@@ -187,10 +187,16 @@ def typewriter_print(request:WSGIRequest, uuid: str):
     #print_on_erika(typewriter, data['body'])
     return {"detail": f"Printing on `{typewriter.erika_name.capitalize()}`"}
 
+@typewriter_router.post("/print/all", response=dict)
+def typewriter_print_all(request: WSGIRequest):
+    requestbody = json.loads(request.body.decode('utf-8'))
+    print_text = requestbody['body']
+    print(f"Broadcasting print message to all typewriters: {print_text}")
+    send_print_message_to_all(print_text)
+    return {"detail": "Broadcasting print message to all online typewriters"}
+
 @typewriter_router.get("/online", response=List[TypewriterSchema])
 def typewriters_online(request):
     typewriters = Typewriter.objects.filter(status=1).select_related('user')
     typewriter_schema_response = [TypewriterSchema.from_orm(typewriter) for typewriter in typewriters]
     return typewriter_schema_response
-    #for typewriter in typewriters:
-    #return [typewriter for typewriter in typewriters]

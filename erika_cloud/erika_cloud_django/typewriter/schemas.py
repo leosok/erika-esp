@@ -15,17 +15,16 @@ class TextdataSchema(BaseModel):
 class TypewriterSchema(BaseModel):
     id: int
     uuid: str
-    user_firstname: Optional[str] = None
-    user_lastname: Optional[str] = None
-    email: str = Field(..., name="user_email")
+    user_firstname: str | None = None
+    user_lastname: str | None = None
+    user_email: str
     chat_active: bool
     erika_name: str
     email: str
     status: int
 
     class Config:
-        orm_mode: True
-        from_attributes = True
+        from_attributes = True  # newer way to specify orm_mode
 
 class MessageSchema(BaseModel):
     id: int

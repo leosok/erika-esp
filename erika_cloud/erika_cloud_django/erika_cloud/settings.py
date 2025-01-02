@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # new
 
     # Mqqt
-    "dmqtt"
+    "dmqtt",
+    'mqtt_handler.apps.MqttHandlerConfig',
 ]
 SITE_ID = 1
 
@@ -180,12 +181,12 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'your_email@example.com')
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# MQTT
-MQTT_USER = os.getenv('MQTT_USER', 'mqtt')
-MQTT_PASS = os.getenv('MQTT_PASS', 'pass')
-MQTT_HOST = os.getenv('MQTT_HOST', 'mqtt://localhost')
+# MQTT Settings
+MQTT_USER = os.getenv('MQTT_USER')
+MQTT_PASS = os.getenv('MQTT_PASS')
+MQTT_HOST = os.getenv('MQTT_HOST', 'localhost').replace('mqtt://', '')  # Remove protocol prefix if present
 MQTT_PORT = int(os.getenv('MQTT_PORT', 1883))
-MQTT_CLIENT_ID = os.getenv('MQTT_CLIENT_ID', 'erika_cloud')
+MQTT_CLIENT_ID = os.getenv('MQTT_CLIENT_ID', f'erika_cloud_{os.getpid()}')  # Add unique client ID
 
 LOGGING = {
     'version': 1,
@@ -219,5 +220,3 @@ LOGGING = {
         },
     },
 }
-
-from erika_cloud.utils import mqtt_handling # noqa

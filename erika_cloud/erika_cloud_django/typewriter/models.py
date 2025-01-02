@@ -1,6 +1,10 @@
+import logging
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import models
+import locale
+from .utils.mqtt_utils import send_print_message
+
 
 class Textdata(models.Model):
     content = models.TextField()
@@ -47,6 +51,34 @@ class Typewriter(models.Model):
 
     def __str__(self):
         return self.erika_name
+
+    def format_mail_for_printing(self, message):
+        locale.setlocale(locale.LC_TIME, "de_DE")
+        print_date = message.received_at.strftime("%A, %d %b %Y %H:%M")
+
+        if message.subject.lower() == 'print':
+            print_template = ["\n\n", message.body]
+        else:
+            print_template = [
+                "\n\n",
+                "--------  EMAIL -------\n",
+                f"{print_date}",
+                f"Von: {message.sender}",
+                f"Btr.: {message.subject}",
+                " ",
+                f"{message.body}"
+            ]
+        return '\n'.join(print_template)
+
+    def print_mails(self):
+        unprinted_messages = self.messages.filter(is_printed=False)
+        logging.info(f"Printing {len(unprinted_messages)} messages on {self.erika_name}")
+        for message in unprinted_messages:
+            logging.info(f"Printing message {message.subject} from {message.sender} on {self.erika_name}")
+            formatted_text = self.format_mail_for_printing(message)
+            send_print_message(self.uuid, formatted_text)
+            message.is_printed = True
+            message.save()
 
 class Message(models.Model):
     typewriter = models.ForeignKey(Typewriter, related_name='messages', on_delete=models.CASCADE)
