@@ -45,3 +45,20 @@ class TypewriterCreateSchema(BaseModel):
     email: str
     chat_active: bool = True
     erika_name: str
+
+class PageLineSchema(BaseModel):
+    line_number: int
+    text: str
+    timestamp: datetime
+
+    class Config:
+        orm_mode = True
+
+class PageSchema(BaseModel):
+    hashid: str
+    lines: List[PageLineSchema]
+    created_at: datetime
+    is_printed: bool = False
+
+    class Config:
+        orm_mode = True

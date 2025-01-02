@@ -94,6 +94,37 @@
         .pending {
             color: #ffc107;
         }
+        .page-list-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .page-list-item:hover {
+            background-color: #f8f9fa;
+        }
+        .modal-dialog {
+            max-width: 80%;
+        }
+        .print-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
+        .print-btn:hover {
+            background-color: #357abd;
+        }
+        .page-content {
+            white-space: pre-wrap;       /* preserve line breaks */
+            word-wrap: break-word;       /* break long words */
+            overflow-wrap: break-word;   /* break long words */
+            overflow-x: hidden;          /* hide horizontal scroll */
+            overflow-y: auto;           /* show vertical scroll */
+            max-height: 60vh;           /* limit height */
+            line-height: 1.5;           /* better readability */
+            padding: 15px;              /* more space around text */
+        }
     </style>
 </head>
 <body>
@@ -111,9 +142,11 @@
                             <h5 class="card-title"><i class="fas fa-keyboard me-2"></i>Typewriters</h5>
                             {% if typewriters %}
                                 <form method="get" action="{% url 'user_dashboard' %}">
+                                    <!-- Debug info -->
+                                    <p class="small text-muted">Debug: {{ typewriter_id }}</p>
                                     <select name="typewriter_id" class="form-select mb-3" onchange="this.form.submit()">
                                         {% for typewriter in typewriters %}
-                                            <option value="{{ typewriter.id }}" {% if typewriter == selected_typewriter %}selected{% endif %}>
+                                            <option value="{{ typewriter.id }}" {% if typewriter.id == typewriter_id %}selected{% endif %}>
                                                 {{ typewriter.erika_name }}
                                             </option>
                                         {% endfor %}
@@ -123,6 +156,7 @@
                                     <p><strong>Name:</strong> {{ selected_typewriter.erika_name }}</p>
                                     <p><strong>UUID:</strong> {{ selected_typewriter.uuid }}</p>
                                     <p><strong>Email:</strong> {{ selected_typewriter.email }}</p>
+                                    <input type="hidden" id="selected-typewriter-uuid" value="{{ selected_typewriter.uuid }}">
                                 {% endif %}
                             {% else %}
                                 <p class="no-content">No typewriters found.</p>
@@ -176,7 +210,20 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="fas fa-file-alt me-2"></i>Pages</h5>
                             {% if pages %}
-                                <pre class="p-3 border rounded" style="height: 300px; overflow-y: auto;">{{ pages }}</pre>
+                                <div class="pages-container" style="height: 300px; overflow-y: auto;">
+                                    {% for page in pages %}
+                                        <div class="page-list-item" onclick="loadPage('{{ page.hashid }}')">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <small class="text-muted">{{ page.timestamp|date:"Y-m-d H:i" }}</small>
+                                                    <br>
+                                                    <small>{{ page.line_count }} lines</small>
+                                                </div>
+                                                <i class="fas fa-chevron-right text-muted"></i>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             {% else %}
                                 <p class="no-content">No pages for the selected typewriter.</p>
                             {% endif %}
@@ -187,6 +234,71 @@
         </div>
     </div>
 
+    <!-- Replace the custom overlay with Bootstrap modal -->
+    <div class="modal fade" id="pageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Page Content</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <small class="text-muted" id="pageDate"></small>
+                        <button class="print-btn" onclick="printPage()">
+                            <i class="fas fa-print me-2"></i>Print
+                        </button>
+                    </div>
+                    <pre class="page-content border rounded bg-light"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentHashId = null;
+        const pageModal = new bootstrap.Modal(document.getElementById('pageModal'));
+
+        function loadPage(hashid) {
+            fetch(`/typewriter/page/${hashid}/content/`)  // Updated path to match URLs
+                .then(response => response.json())
+                .then(data => {
+                    currentHashId = data.hashid;
+                    document.querySelector('.page-content').textContent = data.text;
+                    document.querySelector('#pageDate').textContent = data.timestamp;
+                    pageModal.show();
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    alert('Error loading page content');
+                });
+        }
+
+        function printPage() {
+            if (!currentHashId) return;
+            
+            const uuid = document.querySelector('#selected-typewriter-uuid').value;
+            
+            fetch(`/api/typewriter/${uuid}/print`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    body: document.querySelector('.page-content').textContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Page sent to printer!');
+            })
+            .catch(error => {
+                alert('Error sending to printer');
+                console.error('Error:', error);
+            });
+        }
+    </script>
 </body>
 </html>

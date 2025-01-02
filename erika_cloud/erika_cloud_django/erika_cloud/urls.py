@@ -38,6 +38,7 @@ urlpatterns = [
     path("api/", api.urls),
     path('accounts/', include('allauth.urls')), # new
     path('dashboard/', user_dashboard, name='user_dashboard'),
+    path('typewriter/', include('typewriter.urls')),
     path('', index, name='frontend_index'),
 
 ]
