@@ -17,7 +17,7 @@ COPY pyproject.toml poetry.lock ./
 # RUN poetry config virtualenvs.in-project true
 
 # Install the dependencies
-RUN poetry install --without dev #--no-root
+RUN poetry install --without dev --no-root
 
 ##### End of dependencies installation #####
 

@@ -31,7 +31,7 @@ HTTP_HOST = os.getenv('HTTP_HOST', 'erika-cloud.de')
 SECRET_KEY = "django-insecure-#+n8&lfxvwkw0byr!0v&n4@d(m=&6amyh)+r+7m7iz8(090l%n"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['erika-cloud.de', 'localhost', '127.0.0.1']
 
