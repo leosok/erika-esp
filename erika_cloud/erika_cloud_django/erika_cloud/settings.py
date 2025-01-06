@@ -59,7 +59,10 @@ INSTALLED_APPS = [
     "dmqtt",
     'mqtt_handler.apps.MqttHandlerConfig',
 ]
+
+# for allauth
 SITE_ID = 1
+ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {

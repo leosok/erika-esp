@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from ninja import NinjaAPI
+from ninja.errors import ConfigError
 
 from frontend.views import index
 from typewriter.api import typewriter_router
@@ -29,7 +30,12 @@ api = NinjaAPI()
 # Example: api.add_router("/somepath", some_module.router)
 
 # Include typewriter API
-api.add_router("/typewriter", typewriter_router)
+try:
+    api.add_router("/typewriter", typewriter_router)
+except ConfigError as e:
+    if "Router@'/typewriter' has already been attached to API" not in str(e):
+        raise e
+
 api.add_router("/erika_cloud", erika_cloud_api)
 
 
