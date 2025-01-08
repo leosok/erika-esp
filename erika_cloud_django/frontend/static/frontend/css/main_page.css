@@ -70,25 +70,60 @@ select#typewriters_online{
 @media only screen 
 and (min-device-width : 375px) 
 and (max-device-width : 812px)
-and (-webkit-device-pixel-ratio : 3) { /* Hier dein CSS einifügen */
-
-    body {
-        background-color: #202020;
+and (-webkit-device-pixel-ratio : 3) {
+    /* Light mode styles */
+    @media (prefers-color-scheme: light) {
+        body {
+            background-color: white;
+        }
+        
+        .content textarea {
+            background-color: rgba(0,0,0,0.05);
+            color: black;
+        }
     }
 
-    .header{
-        height: 310px;
+    /* Dark mode styles */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: white;  /* Force white even in dark mode */
+        }
+        
+        .content textarea {
+            background-color: rgba(0,0,0,0.05);
+            color: black;
+        }
+    }
+
+    .header {
+        height: auto;
         width: 100%;
-        background-color: #202020;
+        background: none; /* Remove background image */
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
     }
 
+    .logo_contrainer {
+        width: 100%;
+        height: auto;
+        padding: 0;
+        margin: 0;
+    }
 
-    .content textarea{
+    .logo_contrainer img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        display: block;
+        margin: 0;
+    }
 
+    .content textarea {
         /* border-color: black; */
         border: #878787 1px;
-        /* border-block-style: none; */
-        width: 100%;
+        /* border-block-style: none; */    
+        width: 100%; /* Ensure it does not exceed 100% width */
         border-radius: 5px;
         border-style: dashed;
         min-height: 200px;
@@ -97,13 +132,6 @@ and (-webkit-device-pixel-ratio : 3) { /* Hier dein CSS einifügen */
         background-color: rgba(0,0,0,0.05);
         /* border: none; */
         resize: none;
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
     }
-
-    .logo_contrainer{
-        height:310px;
-        width: 100%;
-        margin: auto;
-        display: block;
-    }
-
 }

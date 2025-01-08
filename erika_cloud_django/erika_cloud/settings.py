@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import logging
 import os
 from pathlib import Path
 import dj_database_url
@@ -33,7 +34,8 @@ SECRET_KEY = "django-insecure-#+n8&lfxvwkw0byr!0v&n4@d(m=&6amyh)+r+7m7iz8(090l%n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['erika-cloud.de', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['erika-cloud.de', 'localhost', '127.0.0.1'] + os.getenv('ALLOWED_HOSTS', '').split(',')
+CSRF_TRUSTED_ORIGINS =  ['https://erika-cloud.de','https://www.erika-cloud.de']# + os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 
 # Application definition
