@@ -67,6 +67,49 @@ select#typewriters_online{
     margin-bottom: 10px;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #202020;
+        color: #ffffff;
+    }
+
+    .header {
+        background-image: url("../img/sky_tile_tall_dark.gif"); /* Use a dark mode image */
+        background-repeat: repeat-x;
+        background-color: #202020;
+    }
+
+    .logo_contrainer img {
+        filter: invert(1); /* Invert the image colors */
+    }
+
+    .content {
+        background-color: transparent; /* Remove background color */
+    }
+
+    .content textarea {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-color: #ffffff;
+    }
+
+    .content button {
+        background-color: #404040;
+        color: #ffffff;
+    }
+
+    .content button:disabled {
+        background-color: #606060;
+        color: #888888;
+    }
+
+    select#typewriters_online {
+        background-color: #404040;
+        color: #ffffff;
+        border-color: #ffffff;
+    }
+}
+
 @media only screen 
 and (min-device-width : 375px) 
 and (max-device-width : 812px)
@@ -86,52 +129,64 @@ and (-webkit-device-pixel-ratio : 3) {
     /* Dark mode styles */
     @media (prefers-color-scheme: dark) {
         body {
-            background-color: white;  /* Force white even in dark mode */
+            background-color: #202020;
+            color: #ffffff;
         }
-        
+
+        .header {
+            height: auto;
+            width: 100%;
+            background-image: none; /* Remove background image */
+            background-color: #202020;
+            padding: 0;
+            margin: 0;
+        }
+
+        .logo_contrainer {
+            width: 100%;
+            height: auto;
+            padding: 0;
+            margin: 0;
+        }
+
+        .logo_contrainer img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+            margin: 0;
+            filter: invert(1); /* Invert the image colors */
+        }
+
+
         .content textarea {
-            background-color: rgba(0,0,0,0.05);
-            color: black;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: #ffffff;
+            width: 100%; /* Ensure it does not exceed 100% width */
+            border-radius: 5px;
+            border-style: dashed;
+            min-height: 200px;
+            font-size: medium;
+            padding: 10px;
+            resize: none;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
-    }
 
-    .header {
-        height: auto;
-        width: 100%;
-        background: none; /* Remove background image */
-        background-color: transparent;
-        padding: 0;
-        margin: 0;
-    }
+        .content button {
+            background-color: #404040;
+            color: #ffffff;
+        }
 
-    .logo_contrainer {
-        width: 100%;
-        height: auto;
-        padding: 0;
-        margin: 0;
-    }
+        .content button:disabled {
+            background-color: #606060;
+            color: #888888;
+        }
 
-    .logo_contrainer img {
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        display: block;
-        margin: 0;
-    }
-
-    .content textarea {
-        /* border-color: black; */
-        border: #878787 1px;
-        /* border-block-style: none; */    
-        width: 100%; /* Ensure it does not exceed 100% width */
-        border-radius: 5px;
-        border-style: dashed;
-        min-height: 200px;
-        font-size: medium;
-        padding: 10px;
-        background-color: rgba(0,0,0,0.05);
-        /* border: none; */
-        resize: none;
-        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        select#typewriters_online {
+            background-color: #404040;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
     }
 }
